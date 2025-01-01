@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithms and Data Structures</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        h3 {
+            color: #34495e;
+        }
+        p, li {
+            font-size: 16px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .algorithm-title {
+            font-weight: bold;
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Algorithms and Data Structures</h1>
+    
+    <h2>Space and Time Efficiency</h2>
+    <p><strong>Importance of Analyzing Algorithmic Complexity</strong></p>
+    <p>Analyzing algorithm complexity ensures scalability and efficient handling of larger data. For example, bubble sort has <span class="algorithm-title">O(n²)</span>, while merge sort has <span class="algorithm-title">O(n log n)</span>.</p>
+    
+    <h3>Orders of Growth</h3>
+    <ul>
+        <li><strong>O(1)</strong>: Constant time (e.g., array access)</li>
+        <li><strong>O(log n)</strong>: Logarithmic time (e.g., binary search)</li>
+        <li><strong>O(n)</strong>: Linear time (e.g., iterating through an array)</li>
+        <li><strong>O(n²)</strong>: Quadratic time (e.g., bubble sort)</li>
+    </ul>
+
+    <h2>Sorting and Searching</h2>
+
+    <h3>Sorting Algorithms</h3>
+    
+    <p><strong>Bubble Sort:</strong></p>
+    <pre class="algorithm-title">
+ALGORITHM BubbleSort(A[0..n-1])
+    // Sorts a given array using bubble sort
+    // Input: An array A[0..n-1] of orderable elements
+    // Output: Array A[0...n-1] sorted in ascending order
+    for i <- 0 to n - 2 do
+        for j <- 0 to n - 2 - i do
+            if A[j+1] < A[j]
+                swap A[j] and A[j+1]
+    </pre>
+
+    <p><strong>Merge Sort:</strong> Efficient divide-and-conquer sorting algorithm with O(n log n) time complexity.</p>
+    <pre class="algorithm-title">
+ALGORITHM MergeSort(A[0..n-1])
+    if n > 1
+        copy A[0...|n/2| - 1 ] to B[0...|n/2| - 1]
+        copy A[|n/2|... n - 1 ] to C[0......|n/2| - 1]
+        MergeSort(B[0...|n/2| - 1])
+        MergeSort(C[0......|n/2| - 1])
+        Merge(B, C, A)
+
+ALGORITHM Merge(B[0...p-1], C[0...q-1], A[0...p+q-1])
+    // Merges two sorted arrays into one sorted array
+    // Input: Arrays B[0...p-1] and C[0...q-1] both sorted
+    // Output: Sorted array A[0...p+q-1] of the elements of B and C
+    i <- 0
+    j <- 0
+    k <- 0
+    while i < p and j < q do
+        if B[i] <= C[j]
+            A[k] <- B[i]
+            i <- i + 1
+        else
+            A[k] <- C[j]
+            j <- j + 1
+        k <- k + 1
+    if i = p
+        copy C[j...q - 1] to A[k...p + q - 1]
+    else
+        copy B[i...p - 1] to A[k...p + q - 1]
+    </pre>
+
+    <p><strong>Quick Sort:</strong> Another divide-and-conquer algorithm that selects a pivot and partitions the array.</p>
+    <pre class="algorithm-title">
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int partition(vector<int>& A, int l, int r) {
+    int p = A[l];
+    int i = l;
+    int j = r + 1;
+    while (true) {
+        do {
+            i++;
+        } while (i <= r && A[i] < p);
+
+        do {
+            j--;
+        } while (A[j] > p);
+
+        if (i >= j) break;
+        swap(A[i], A[j]);
+    }
+    swap(A[l], A[j]);
+    return j;
+}
+
+void quickSort(vector<int>& A, int l, int r) {
+    if (l < r) {
+        int s = partition(A, l, r);
+        quickSort(A, l, s - 1);
+        quickSort(A, s + 1, r);
+    }
+}
+
+int main() {
+    vector<int> A = {10, 7, 8, 9, 1, 5};
+    quickSort(A, 0, A.size() - 1);
+    for (int x : A) cout << x << " ";
+    return 0;
+}
+    </pre>
+
+    <h3>Searching Algorithms</h3>
+    <p><strong>Binary Search:</strong> Binary search is an efficient algorithm for finding an element in a sorted array with O(log n) time complexity.</p>
+    <pre class="algorithm-title">
+int binarySearch(const vector<int>& arr, int key) {
+    int left = 0, right = arr.size() - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == key) return mid;
+        if (arr[mid] < key) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}
+    </pre>
+
+    <h2>Graph Algorithms</h2>
+
+    <h3>Spanning Trees</h3>
+    <p><strong>Kruskal’s Algorithm:</strong></p>
+    <pre class="algorithm-title">
+int Find(int parent[], int i) {
+    if (parent[i] != i)
+        parent[i] = Find(parent, parent[i]);
+    return parent[i];
+}
+
+void Union(int parent[], int rank[], int x, int y) {
+    int xroot = Find(parent, x);
+    int yroot = Find(parent, y);
+
+    if (rank[xroot] < rank[yroot])
+        parent[xroot] = yroot;
+    else if (rank[xroot] > rank[yroot])
+        parent[yroot] = xroot;
+    else {
+        parent[yroot] = xroot;
+        rank[xroot]++;
+    }
+}
+
+void KruskalMST(Edge edges[], int E, int V) {
+    int weights[E], idx[E];
+    for (int i = 0; i < E; i++) {
+        weights[i] = edges[i].weight;
+        idx[i] = i;
+    }
+
+    MergeSort(weights, idx, 0, E - 1);
+
+    int parent[V], rank[V];
+    for (int i = 0; i < V; i++) {
+        parent[i] = i;
+        rank[i] = 0;
+    }
+
+    Edge mst[V - 1];
+    int mstSize = 0;
+
+    for (int i = 0; i < E && mstSize < V - 1; i++) {
+        Edge edge = edges[idx[i]];
+        int x = Find(parent, edge.src);
+        int y = Find(parent, edge.dest);
+
+        if (x != y) {
+            mst[mstSize++] = edge;
+            Union(parent, rank, x, y);
+        }
+    }
+
+    cout << "Edges in the Minimum Spanning Tree:\n";
+    int cost = 0;
+    for (int i = 0; i < mstSize; i++) {
+        cout << mst[i].src << " -- " << mst[i].dest << " == " << mst[i].weight << endl;
+        cost += mst[i].weight;
+    }
+    cout << "Cost = " << cost << endl;
+}
+    </pre>
+
+    <h3>Shortest Path Algorithms</h3>
+    <p><strong>Dijkstra's Algorithm:</strong> Dijkstra's algorithm finds the shortest path between two points in a graph, used in GPS navigation and routing applications.</p>
+    <pre class="algorithm-title">
+#include <iostream>
+#include <vector>
+#define MAX 9999
+using namespace std;
+
+class dijkstra {
+public:
+    int dist[100];
+    int path[100];
+    int visited[100] = {0};
+    int v;
+    int src;
+
+    void read(int cost[50][50]);
+    void initialize(int cost[50][50]);
+};
+
+void dijkstra::initialize(int cost[50][50]) {
+    for (int i = 0; i < v; i++) {
+        path[i] = src;
+        dist[i] = cost[src][i];
+        visited[i] = 0;
+    }
+    visited[src] = 1;
+}
+
+void dijkstra::read(int cost[50][50]) {
+    cout << "Enter the cost matrix:" << endl;
+    for (int i = 0; i < v; i++) {
+        for (int j = 0; j < v; j++) {
+            cin >> cost[i][j];
+        }
+    }
+}
+
+int main() {
+    int cost[50][50];
+    dijkstra d;
+
+    cout << "Enter the number of vertices: ";
+    cin >> d.v;
+
+    d.read(cost);
+
+    cout << "Enter the source vertex: ";
+    cin >> d.src;
+
+    d.initialize(cost);
+
+    cout << "Initialized distances from source: ";
+    for (int i = 0; i < d.v; i++) {
+        cout << d.dist[i] << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
+    </pre>
+     <a href="index.html">Back to Portfolio</a>
+
+    <h2>Algorithm Design Techniques</h2>
+    <ul>
+        <li><strong>Divide and Conquer:</strong> Breaks problems into smaller sub-problems, solves them independently, and combines results.</li>
+        <li><strong>Greedy Algorithms:</strong> Makes the best choice at each step in the hope of finding the global optimum.</li>
+        <li><strong>Dynamic Programming:</strong> Solves problems by storing the results of overlapping subproblems to avoid redundant work.</li>
+    </ul>
+
+    <h2>Reflections</h2>
+    <p>Learning how to break down complex problems into smaller components allows for better problem-solving and optimization. Balancing optimization with simplicity ensures maintainability while delivering efficient solutions. Adapting solutions across different challenges involves choosing the right algorithm for the problem at hand.</p>
+</body>
+</html>
